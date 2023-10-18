@@ -1,0 +1,20 @@
+---
+- name: Ensure a specific file exists
+  hosts: all
+  vars:
+    file_to_ensure: "./operand.txt"
+  tasks:
+    - name: Check if the file exists
+      stat:
+        path: "{{ file_to_ensure }}"
+      register: file_status
+
+    - name: Create the file if it doesn't exist
+      file:
+        path: "{{ file_to_ensure }}"
+        state: touch
+      when: not file_status.stat.exists
+
+    - name: Display a message
+      debug:
+        msg: "The file now exists."
